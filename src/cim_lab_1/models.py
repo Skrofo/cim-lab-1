@@ -40,7 +40,7 @@ class CNNClassifier(nn.Module):
         self.encoder = nn.Sequential(
             nn.Flatten(),
             # TODO: determine the flattened feature size after the feature extractor.
-            nn.Linear(c2 * 7 * 7, latent_dim),
+            nn.Linear(, latent_dim),
             nn.ReLU(),
         )
         self.head = nn.Linear(latent_dim, 10)

@@ -18,7 +18,7 @@ def build_transform(cfg, train: bool):
             augmentation.append(
                 v2.RandomAffine(
                     degrees=cfg.rotation_degrees,
-                    translate=(cfg.translation_fraction, cfg.translation_fraction),
+                    # TODO: add translation using cfg.translation_fraction
                 )
             )
         if cfg.contrast is not None:
