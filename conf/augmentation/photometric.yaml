@@ -1,0 +1,4 @@
+name: photometric
+rotation_degrees: 0
+translation_fraction: 0.0
+contrast: [0.7, 1.3]

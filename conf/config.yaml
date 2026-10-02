@@ -1,0 +1,37 @@
+defaults:
+  - model: mlp
+  - augmentation: none
+  - _self_
+
+seed: 42
+device: cuda
+data_dir: ${hydra:runtime.cwd}/data
+
+run:
+  # Use a short descriptive name, e.g. cnn_baseline or cnn_augmented.
+  # Leave as auto to obtain a timestamped run directory automatically.
+  name: auto
+
+training:
+  epochs: 5
+  batch_size: 128
+  num_workers: 2
+  lr: 0.001
+  optimizer: adam
+  weight_decay: 0.0
+
+logging:
+  use_wandb: false
+  project: cim-lab-1
+  entity: null
+  log_model_artifact: true
+
+hydra:
+  job:
+    chdir: false
+  run:
+    # The timestamp prevents repeated named runs from overwriting one another.
+    dir: outputs/runs/${run.name}/${now:%Y-%m-%d_%H-%M-%S}
+  sweep:
+    dir: outputs/multirun/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${hydra.job.num}_${model.name}_lr-${training.lr}

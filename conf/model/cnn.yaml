@@ -1,0 +1,3 @@
+name: cnn
+channels: [16, 32]
+latent_dim: 64
