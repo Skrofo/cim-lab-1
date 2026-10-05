@@ -14,6 +14,7 @@ class MLPClassifier(nn.Module):
             nn.Linear(28 * 28, hidden_dim),
             nn.ReLU(),
             # TODO: add a layer mapping hidden_dim to latent_dim.
+            nn.Linear(hidden_dim, latent_dim)
         )
         self.head = nn.Linear(latent_dim, 10)
 
@@ -36,11 +37,14 @@ class CNNClassifier(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(2),
             # TODO: add a second convolution, non-linearity and pooling operation.
+            nn.Conv2d(c1, c2, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(2)
         )
         self.encoder = nn.Sequential(
             nn.Flatten(),
             # TODO: determine the flattened feature size after the feature extractor.
-            nn.Linear(, latent_dim),
+            nn.Linear(1568, latent_dim),
             nn.ReLU(),
         )
         self.head = nn.Linear(latent_dim, 10)

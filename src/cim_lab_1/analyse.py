@@ -28,9 +28,35 @@ def load_model_from_run(run_dir: str, device: torch.device):
 def analyse_transform(model, loader, device, transform_fn, strengths):
     results = {"strength": [], "accuracy": [], "consistency": [], "similarity": []}
 
-    # TODO: for every strength, compare original and transformed batches.
-    # Calculate reference predictions/features once per batch.
-    raise NotImplementedError
+    for strength in strengths:
+        batch_accuracy = []
+        batch_consistency = []
+        batch_similarity = []
+
+        for images, labels in loader:
+            images = images.to(device, non_blocking=True)
+            labels = labels.to(device, non_blocking=True)
+
+            transformed_images = transform_fn(images, strength)
+
+            with torch.inference_mode():
+                reference_logits = model(images)
+                transformed_logits = model(transformed_images)
+                reference_features = model.forward_features(images)
+                transformed_features = model.forward_features(transformed_images)
+
+            batch_accuracy.append(accuracy(transformed_logits, labels).item())
+            batch_consistency.append(prediction_consistency(reference_logits, transformed_logits).item())
+            batch_similarity.append(
+                representation_similarity(reference_features, transformed_features).item()
+            )
+
+        results["strength"].append(strength)
+        results["accuracy"].append(sum(batch_accuracy) / len(batch_accuracy))
+        results["consistency"].append(sum(batch_consistency) / len(batch_consistency))
+        results["similarity"].append(sum(batch_similarity) / len(batch_similarity))
+
+    return results
 
 
 def plot_results(all_results, output_path: Path):
